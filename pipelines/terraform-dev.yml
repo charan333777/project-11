@@ -1,0 +1,22 @@
+trigger: none
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: none
+
+  - task: AzureCLI@2
+    displayName: Verify Azure connection
+    inputs:
+      azureSubscription: 'azure-banddle-dev'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        set -euo pipefail
+        az rest \
+          --method get \
+          --url "https://management.azure.com/subscriptions/491228e0-b3ec-4700-9134-3a45c53dcf8b?api-version=2016-06-01" \
+          --query "{name:displayName, id:subscriptionId, state:state}" \
+          --output table
